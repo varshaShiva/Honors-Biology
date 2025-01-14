@@ -1,0 +1,174 @@
+Here is the updated code with the new Honors Biology questions and answers:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honors Biology AI Chatbox</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #chatbox {
+            width: 400px;
+            height: 600px;
+            border: 1px solid #ccc;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        #input-box {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+        #input-box input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-right: 1px solid #ccc;
+        }
+        #input-box button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        #input-box button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+        .ai {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+        }
+    </style>
+    <!-- Load Fuse.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.5.3/dist/fuse.min.js"></script>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="messages"></div>
+        <div id="input-box">
+            <input type="text" id="user-input" placeholder="Ask a question...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const questionsAnswers = [
+            { question: "What is biology?", answer: "Biology is the scientific study of life and living organisms." },
+            { question: "What are the characteristics of life?", answer: "The characteristics of life include growth, reproduction, metabolism, response to stimuli, homeostasis, and adaptation." },
+            { question: "What is the difference between prokaryotic and eukaryotic cells?", answer: "Prokaryotic cells are simpler and do not have a nucleus, while eukaryotic cells have a nucleus and other membrane-bound organelles." },
+            { question: "What is the function of the cell membrane?", answer: "The cell membrane controls what enters and exits the cell, providing protection and support." },
+            { question: "What is the purpose of photosynthesis?", answer: "Photosynthesis is the process by which plants use sunlight to make food (glucose) from carbon dioxide and water." },
+            { question: "What is cellular respiration?", answer: "Cellular respiration is the process by which cells break down glucose to produce energy (ATP)." },
+            { question: "What is the difference between aerobic and anaerobic respiration?", answer: "Aerobic respiration uses oxygen to produce energy, while anaerobic respiration does not use oxygen and produces less energy." },
+            { question: "What are enzymes?", answer: "Enzymes are proteins that speed up chemical reactions in the body." },
+            { question: "What is DNA?", answer: "DNA (deoxyribonucleic acid) is the molecule that carries genetic information." },
+            { question: "What is the difference between DNA and RNA?", answer: "DNA stores genetic information, while RNA helps in the process of making proteins." },
+            { question: "What is mitosis?", answer: "Mitosis is the process of cell division that results in two identical daughter cells." },
+            { question: "What is meiosis?", answer: "Meiosis is the type of cell division that produces four non-identical gametes (sperm and egg cells)." },
+            { question: "What is the purpose of the ribosome?", answer: "Ribosomes are responsible for assembling proteins in the cell." },
+            { question: "What is the function of the mitochondria?", answer: "Mitochondria produce energy (ATP) for the cell through cellular respiration." },
+            { question: "What is the function of the chloroplast?", answer: "Chloroplasts conduct photosynthesis in plant cells, converting light energy into chemical energy." },
+            { question: "What is a gene?", answer: "A gene is a segment of DNA that codes for a specific trait or protein." },
+            { question: "What is an allele?", answer: "An allele is a version of a gene that can determine a specific trait." },
+            { question: "What is a dominant allele?", answer: "A dominant allele is one that will express its trait even if only one copy is present." },
+            { question: "What is a recessive allele?", answer: "A recessive allele will only express its trait if two copies are present (one from each parent)." },
+            { question: "What is the difference between genotype and phenotype?", answer: "Genotype is the genetic makeup of an organism, while phenotype is the physical appearance or traits." },
+            { question: "What is genetic variation?", answer: "Genetic variation refers to the differences in DNA sequences among individuals in a population." },
+            { question: "What is natural selection?", answer: "Natural selection is the process where organisms with traits that help them survive and reproduce are more likely to pass those traits on to the next generation." },
+            { question: "What is evolution?", answer: "Evolution is the change in the genetic makeup of a population over time." },
+            { question: "What is the role of the cell cycle?", answer: "The cell cycle is the process through which a cell grows, divides, and prepares for the next cycle." },
+            { question: "What is the function of the nucleus?", answer: "The nucleus stores the cell’s genetic material (DNA) and controls cell activities." },
+            { question: "What is a mutation?", answer: "A mutation is a change in the DNA sequence that can lead to changes in traits or behaviors." },
+            { question: "What are the four major biomolecules?", answer: "The four major biomolecules are carbohydrates, lipids, proteins, and nucleic acids." },
+            { question: "What is the function of carbohydrates?", answer: "Carbohydrates provide energy and are a key part of cell structure." },
+            { question: "What are lipids?", answer: "Lipids are fats that store energy, protect organs, and make up cell membranes." },
+            { question: "What is the function of proteins?", answer: "Proteins serve many functions, including catalyzing reactions, supporting cell structure, and transporting materials." },
+            { question: "What are nucleic acids?", answer: "Nucleic acids, like DNA and RNA, store and transmit genetic information." },
+            { question: "What is the role of water in biology?", answer: "Water is essential for life because it helps with chemical reactions, temperature regulation, and nutrient transport." },
+            { question: "What is a food chain?", answer: "A food chain shows how energy flows from one organism to another in an ecosystem." },
+            { question: "What is a food web?", answer: "A food web is a network of interconnected food chains that shows the complex feeding relationships in an ecosystem." },
+            { question: "What is the role of producers in an ecosystem?", answer: "Producers, like plants, make their own food through photosynthesis and provide energy for other organisms in the ecosystem." },
+            { question: "What is a trophic level?", answer: "A trophic level represents a position in the food chain or food web, such as producer, primary consumer, or secondary consumer." },
+            { question: "What is the difference between an autotroph and a heterotroph?", answer: "Autotrophs make their own food (like plants), while heterotrophs rely on other organisms for food (like animals)." },
+            { question: "What is an ecosystem?", answer: "An ecosystem is a community of living organisms interacting with their environment." },
+            { question: "What is biodiversity?", answer: "Biodiversity refers to the variety of different species in an ecosystem." },
+            { question: "What is the water cycle?", answer: "The water cycle describes how water moves through the environment, including evaporation, condensation, precipitation, and collection." },
+            { question: "What is ecological succession?", answer: "Ecological succession is the process by which ecosystems change over time, with one community gradually being replaced by another." },
+            { question: "What is the difference between primary and secondary succession?", answer: "Primary succession happens in an area where no life existed before, while secondary succession occurs in an area where a disturbance has taken place but some life remains." },
+            { question: "What are the stages of the cell cycle?", answer: "The cell cycle includes interphase (growth), mitosis (cell division), and cytokinesis (division of the cytoplasm)." },
+            { question: "What is the function of the Golgi apparatus?", answer: "The Golgi apparatus processes and packages proteins and lipids for transport out of the cell." },
+            { question: "What is a cladogram?", answer: "A cladogram is a diagram that shows the evolutionary relationships between different species based on shared characteristics." }
+        ];
+
+        const greetings = ["hi", "hello", "hey"];
+
+        const fuse = new Fuse(questionsAnswers, {
+            keys: ['question'],
+            threshold: 0.4 // Adjust this value to make the search more or less fuzzy
+        });
+
+        const messagesDiv = document.getElementById('messages');
+
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim().toLowerCase();
+            if (message) {
+                addMessage('user', userInput.value);
+                userInput.value = '';
+                getAIResponse(message);
+            }
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function getAIResponse(userQuestion) {
+            let answer = "I'm sorry, I don't know the answer to that.";
+
+            // Basic responses for greetings
+            if (greetings.includes(userQuestion)) {
+                answer = "Hi, I am a biology bot. I can help you with Honors Biology. Ask me anything.";
+            } else {
+                const result = fuse.search(userQuestion);
+                if (result.length > 0) {
+                    answer = result[0].item.answer;
+                }
+            }
+
+            addMessage('ai', answer);
+        }
+    </script>
+</body>
+</html>
+```
